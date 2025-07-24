@@ -8,6 +8,7 @@ import {
   generateRandomUserData,
   getCartFromCookie,
   setCartCookie,
+  UserData,
 } from "../lib/clientUtils";
 import { products } from "../lib/products";
 import { useBadges } from "../lib/useBadges";
@@ -15,24 +16,29 @@ import { useVisit } from "../lib/useVisit";
 
 export default function Home() {
   const [cart, setCart] = useState<number[]>([]);
+  const [user, setUser] = useState<UserData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const { badges, loading: badgesLoading } = useBadges();
 
-  // Send visit event when app first opens
-  useVisit();
+  // Only send visit event if user exists
+  useVisit(user);
 
   // Initialize user data and cart on component mount
   useEffect(() => {
-    let user = getUserDataFromCookie();
-
-    if (!user) {
-      user = generateRandomUserData();
-      setUserDataCookie(user);
-    }
+    const existingUser = getUserDataFromCookie();
+    setUser(existingUser);
 
     // Initialize cart from cookie
     const savedCart = getCartFromCookie();
     setCart(savedCart);
+    setIsLoading(false);
   }, []);
+
+  const handleGetStarted = () => {
+    const newUser = generateRandomUserData();
+    setUserDataCookie(newUser);
+    setUser(newUser);
+  };
 
   const addToCart = (productId: number) => {
     const newCart = [...cart, productId];
@@ -40,6 +46,60 @@ export default function Home() {
     setCartCookie(newCart);
   };
 
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show welcome screen if no user exists
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <header className="bg-white shadow-sm border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center py-6">
+              <div className="flex items-center">
+                <h1 className="text-2xl font-bold text-gray-900">ShopDemo</h1>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Welcome Content */}
+        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-900 mb-6">
+              Welcome to ShopDemo
+            </h1>
+            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+              Experience our gamified shopping platform with badges, rewards,
+              and personalized experiences. Click &ldquo;Get Started&rdquo; to
+              begin your journey!
+            </p>
+            <button
+              onClick={handleGetStarted}
+              className="bg-blue-600 text-white py-3 px-8 rounded-lg hover:bg-blue-700 transition-colors font-medium text-lg"
+            >
+              Get Started
+            </button>
+            <p className="text-sm text-gray-500 mt-4">
+              This will create a demo account for you to explore the features
+            </p>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // Show main app content when user exists
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -77,7 +137,7 @@ export default function Home() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome to ShopDemo
+            Welcome back, {user.firstName}!
           </h2>
           <p className="text-gray-600">
             Discover amazing products at great prices

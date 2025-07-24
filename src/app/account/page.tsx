@@ -2,34 +2,39 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   getUserDataFromCookie,
-  setUserDataCookie,
-  generateRandomUserData,
   UserData,
   getCartFromCookie,
   getOrderHistoryFromCookie,
   Order,
+  clearUserDataCookie,
 } from "../../lib/clientUtils";
 import { useBadges } from "../../lib/useBadges";
 import { useUser } from "../../lib/useUser";
 import { useVisit } from "@/lib/useVisit";
 
 export default function Account() {
+  const router = useRouter();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [cartCount, setCartCount] = useState(0);
   const [purchases, setPurchases] = useState<Order[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { badges, loading: badgesLoading, error: badgesError } = useBadges();
   const { user, loading: userLoading, error: userError } = useUser();
-  useVisit();
+
+  // Only send visit event if user exists
+  useVisit(userData);
 
   // Initialize user data, cart count, and order history on component mount
   useEffect(() => {
-    let user = getUserDataFromCookie();
+    const user = getUserDataFromCookie();
 
     if (!user) {
-      user = generateRandomUserData();
-      setUserDataCookie(user);
+      // Redirect to home if no user exists
+      router.push("/");
+      return;
     }
 
     setUserData(user);
@@ -41,7 +46,27 @@ export default function Account() {
     // Get order history from cookie
     const orderHistory = getOrderHistoryFromCookie();
     setPurchases(orderHistory);
-  }, []);
+    setIsLoading(false);
+  }, [router]);
+
+  const handleLogout = () => {
+    // Clear user data from cookie
+    clearUserDataCookie();
+    // Redirect to home page
+    router.push("/");
+  };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -79,25 +104,35 @@ export default function Account() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* User Profile Section */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-              <span className="text-2xl font-bold text-blue-600">
-                {userData
-                  ? `${userData.firstName[0]}${userData.lastName[0]}`
-                  : "..."}
-              </span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                <span className="text-2xl font-bold text-blue-600">
+                  {userData
+                    ? `${userData.firstName[0]}${userData.lastName[0]}`
+                    : "..."}
+                </span>
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  {userData
+                    ? `${userData.firstName} ${userData.lastName}`
+                    : "Loading..."}
+                </h1>
+                <p className="text-gray-600">
+                  {userData?.email || "Loading..."}
+                </p>
+                <p className="text-sm text-gray-500">
+                  Member since {userData?.memberSince || "Loading..."}
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                {userData
-                  ? `${userData.firstName} ${userData.lastName}`
-                  : "Loading..."}
-              </h1>
-              <p className="text-gray-600">{userData?.email || "Loading..."}</p>
-              <p className="text-sm text-gray-500">
-                Member since {userData?.memberSince || "Loading..."}
-              </p>
-            </div>
+            <button
+              onClick={handleLogout}
+              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors font-medium"
+            >
+              Log Out
+            </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">

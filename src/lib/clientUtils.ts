@@ -260,6 +260,17 @@ export function setUserDataCookie(userData: UserData): void {
   }
 }
 
+export function clearUserDataCookie(): void {
+  try {
+    // Set cookie with past expiration date to clear it
+    const expires = new Date();
+    expires.setTime(expires.getTime() - 24 * 60 * 60 * 1000); // 1 day in the past
+    document.cookie = `userData=;expires=${expires.toUTCString()};path=/;samesite=lax`;
+  } catch (error) {
+    console.error("Error clearing user data cookie:", error);
+  }
+}
+
 // Cart utilities
 export function getCartFromCookie(): number[] {
   try {

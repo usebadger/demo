@@ -2,10 +2,9 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   getUserDataFromCookie,
-  setUserDataCookie,
-  generateRandomUserData,
   UserData,
   getCartFromCookie,
   setCartCookie,
@@ -17,22 +16,28 @@ import { useVisit } from "@/lib/useVisit";
 import { usePolling } from "@/lib/PollingContext";
 
 export default function Checkout() {
-  useVisit();
-  const { triggerFastPolling } = usePolling();
-  const [promiseToPay, setPromiseToPay] = useState(false);
-  const [orderComplete, setOrderComplete] = useState(false);
+  const router = useRouter();
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [cartItems, setCartItems] = useState<
     { productId: number; quantity: number }[]
   >([]);
+  const [promiseToPay, setPromiseToPay] = useState(false);
+  const [orderComplete, setOrderComplete] = useState(false);
+
+  const { triggerFastPolling } = usePolling();
+
+  // Only send visit event if user exists
+  useVisit(userData);
 
   // Initialize user data and cart on component mount
   useEffect(() => {
-    let user = getUserDataFromCookie();
+    const user = getUserDataFromCookie();
 
     if (!user) {
-      user = generateRandomUserData();
-      setUserDataCookie(user);
+      // Redirect to home if no user exists
+      router.push("/");
+      return;
     }
 
     setUserData(user);
@@ -53,7 +58,20 @@ export default function Checkout() {
     );
 
     setCartItems(items);
-  }, []);
+    setIsLoading(false);
+  }, [router]);
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   const calculateSubtotal = () => {
     return cartItems.reduce((total, item) => {

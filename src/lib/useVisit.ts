@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
+import { UserData } from "./clientUtils";
 
-export function useVisit() {
+export function useVisit(user?: UserData | null) {
   const hasVisitedRef = useRef(false);
 
   useEffect(() => {
-    // Send visit event on every page load/refresh
-    // The useRef prevents duplicate calls during the same render cycle
-    if (!hasVisitedRef.current) {
+    // Only send visit event if user exists and we haven't already sent one
+    if (user && !hasVisitedRef.current) {
       hasVisitedRef.current = true;
 
       // Send visit event
@@ -25,5 +25,5 @@ export function useVisit() {
           console.error("Failed to send visit event:", error);
         });
     }
-  }, []);
+  }, [user]);
 }
