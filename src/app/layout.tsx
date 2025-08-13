@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import BadgeChangeProvider from "./BadgeChangeProvider";
-import { PollingProvider } from "../lib/PollingContext";
+import Providers from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,9 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ShopDemo | Simple Ecommerce Store",
-  description:
-    "A simple ecommerce store with products, checkout, and account management",
+  title: "Demo App",
+  description: "A clean Next.js demo app",
 };
 
 export default function RootLayout({
@@ -30,9 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <PollingProvider>
-          <BadgeChangeProvider>{children}</BadgeChangeProvider>
-        </PollingProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

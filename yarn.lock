@@ -515,6 +515,18 @@
     postcss "^8.4.41"
     tailwindcss "4.1.11"
 
+"@tanstack/query-core@5.83.1":
+  version "5.83.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.83.1.tgz#eed82970b30cb24536f561613b5630e03d349628"
+  integrity sha512-OG69LQgT7jSp+5pPuCfzltq/+7l2xoweggjme9vlbCPa/d7D7zaqv5vN/S82SzSYZ4EDLTxNO1PWrv49RAS64Q==
+
+"@tanstack/react-query@^5.0.0":
+  version "5.84.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.84.2.tgz#008a8cd26b1e258f87f54cf00cbae14e9c3c84d2"
+  integrity sha512-cZadySzROlD2+o8zIfbD978p0IphuQzRWiiH3I2ugnTmz4jbjc0+TdibpwqxlzynEen8OulgAg+rzdNF37s7XQ==
+  dependencies:
+    "@tanstack/query-core" "5.83.1"
+
 "@tybys/wasm-util@^0.9.0":
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/@tybys/wasm-util/-/wasm-util-0.9.0.tgz#3e75eb00604c8d6db470bf18c37b7d984a0e3355"
@@ -750,10 +762,10 @@
   resolved "https://registry.yarnpkg.com/@unrs/resolver-binding-win32-x64-msvc/-/resolver-binding-win32-x64-msvc-1.11.1.tgz#538b1e103bf8d9864e7b85cc96fa8d6fb6c40777"
   integrity sha512-lrW200hZdbfRtztbygyaq/6jP6AKE8qQN2KvPcJ+x7wiD038YtnYtZ82IMNJ69GJibV7bwL3y9FgK+5w/pYt6g==
 
-"@usebadger/sdk@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@usebadger/sdk/-/sdk-1.0.0.tgz#ead532c6e90a9f3d51f91d201ff0cafac095cb77"
-  integrity sha512-RWFUYlZKT2Ogv4wikCf941kGJ6aWLRNEsmv63lHJsqrRDOMKxFCxd32M/vJeEfx/zAhTr8Z6fcMQ+hFhkikOXw==
+"@usebadger/sdk@^1.0.1":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@usebadger/sdk/-/sdk-1.1.0.tgz#50a04ce3aae128565f49c28d82e8ff61d0eda00d"
+  integrity sha512-pJqOUhjKJ9jNACr90hIxgxNFUyIBGrLZ3WlL5NbB/eJrOlJM08P/WYeCepTbvaeNVBGDdiJVF3RLma6dg5FcaQ==
 
 acorn-jsx@^5.3.2:
   version "5.3.2"
@@ -2434,6 +2446,11 @@ react-dom@^19.0.0:
   integrity sha512-Xs1hdnE+DyKgeHJeJznQmYMIBG3TKIHJJT95Q58nHLSrElKlGQqDTR2HQ9fx5CN/Gk6Vh/kupBTDLU11/nDk/g==
   dependencies:
     scheduler "^0.26.0"
+
+react-icons@^5.5.0:
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-5.5.0.tgz#8aa25d3543ff84231685d3331164c00299cdfaf2"
+  integrity sha512-MEFcXdkP3dLo8uumGI5xN3lDFNsRtrjbOEKDLD7yv76v4wpnEq2Lt2qeHaQOr34I/wPN3s3+N08WkQ+CW37Xiw==
 
 react-is@^16.13.1:
   version "16.13.1"
