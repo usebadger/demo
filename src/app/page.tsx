@@ -33,6 +33,24 @@ export default function Home() {
           </div>
           <LevelUp />
         </div>
+
+        <div className="my-12 bg-white p-8 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">
+            Try it out
+          </h2>
+          <p className="text-gray-600 mb-4 text-center">
+            You can create some badges and see how they work by visiting the
+            dashboard.
+          </p>
+          <div className="flex justify-center">
+            <a
+              href="https://app.usebadger.dev/auth/signin/guest"
+              className="bg-green-300 text-green-900 px-4 py-2 rounded-md"
+            >
+              Check out the dashboard
+            </a>
+          </div>
+        </div>
       </main>
     </div>
   );
